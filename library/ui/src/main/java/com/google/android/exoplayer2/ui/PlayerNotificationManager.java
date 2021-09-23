@@ -278,6 +278,11 @@ public class PlayerNotificationManager {
     void onCustomAction(Player player, String action, Intent intent);
   }
 
+  /** Handles primary actions. */
+  public interface PrimaryActionReceiver {
+    void onAction(Player player, String action, Intent intent);
+  }
+
   /** A listener for changes to the notification. */
   public interface NotificationListener {
 
@@ -313,6 +318,7 @@ public class PlayerNotificationManager {
 
     @Nullable protected NotificationListener notificationListener;
     @Nullable protected CustomActionReceiver customActionReceiver;
+    @Nullable protected PrimaryActionReceiver primaryActionReceiver;
     protected MediaDescriptionAdapter mediaDescriptionAdapter;
     protected int channelNameResourceId;
     protected int channelDescriptionResourceId;
@@ -428,6 +434,19 @@ public class PlayerNotificationManager {
      */
     public Builder setCustomActionReceiver(CustomActionReceiver customActionReceiver) {
       this.customActionReceiver = customActionReceiver;
+      return this;
+    }
+
+    /**
+     * The {@link PrimaryActionReceiver} to be used.
+     *
+     * <p>The default is {@code null}.
+     * If set, calls this on primary actions instead of using default behaviour.
+     *
+     * @return This builder.
+     */
+    public Builder setPrimaryActionReceiver(PrimaryActionReceiver primaryActionReceiver) {
+      this.primaryActionReceiver = primaryActionReceiver;
       return this;
     }
 
@@ -570,6 +589,7 @@ public class PlayerNotificationManager {
           notificationId,
           mediaDescriptionAdapter,
           notificationListener,
+          primaryActionReceiver,
           customActionReceiver,
           smallIconResourceId,
           playActionIconResourceId,
@@ -669,6 +689,7 @@ public class PlayerNotificationManager {
   private final int notificationId;
   private final MediaDescriptionAdapter mediaDescriptionAdapter;
   @Nullable private final NotificationListener notificationListener;
+  @Nullable private final PrimaryActionReceiver primaryActionReceiver;
   @Nullable private final CustomActionReceiver customActionReceiver;
   private final Handler mainHandler;
   private final NotificationManagerCompat notificationManager;
@@ -713,6 +734,7 @@ public class PlayerNotificationManager {
       int notificationId,
       MediaDescriptionAdapter mediaDescriptionAdapter,
       @Nullable NotificationListener notificationListener,
+      @Nullable PrimaryActionReceiver primaryActionReceiver,
       @Nullable CustomActionReceiver customActionReceiver,
       int smallIconResourceId,
       int playActionIconResourceId,
@@ -729,6 +751,7 @@ public class PlayerNotificationManager {
     this.notificationId = notificationId;
     this.mediaDescriptionAdapter = mediaDescriptionAdapter;
     this.notificationListener = notificationListener;
+    this.primaryActionReceiver = primaryActionReceiver;
     this.customActionReceiver = customActionReceiver;
     this.smallIconResourceId = smallIconResourceId;
     this.groupKey = groupKey;
@@ -1187,7 +1210,7 @@ public class PlayerNotificationManager {
     isNotificationStarted = true;
   }
 
-  private void stopNotification(boolean dismissedByUser) {
+  protected void stopNotification(boolean dismissedByUser) {
     if (isNotificationStarted) {
       isNotificationStarted = false;
       mainHandler.removeMessages(MSG_START_OR_UPDATE_NOTIFICATION);
@@ -1555,21 +1578,54 @@ public class PlayerNotificationManager {
         } else if (player.getPlaybackState() == Player.STATE_ENDED) {
           controlDispatcher.dispatchSeekTo(player, player.getCurrentWindowIndex(), C.TIME_UNSET);
         }
-        controlDispatcher.dispatchSetPlayWhenReady(player, /* playWhenReady= */ true);
+
+        if (primaryActionReceiver != null) {
+          primaryActionReceiver.onAction(player, action, intent);
+        } else {
+          controlDispatcher.dispatchSetPlayWhenReady(player, /* playWhenReady= */ true);
+        }
       } else if (ACTION_PAUSE.equals(action)) {
-        controlDispatcher.dispatchSetPlayWhenReady(player, /* playWhenReady= */ false);
+        if (primaryActionReceiver != null) {
+          primaryActionReceiver.onAction(player, action, intent);
+        } else {
+          controlDispatcher.dispatchSetPlayWhenReady(player, /* playWhenReady= */ false);
+        }
       } else if (ACTION_PREVIOUS.equals(action)) {
-        controlDispatcher.dispatchPrevious(player);
+        if (primaryActionReceiver != null) {
+          primaryActionReceiver.onAction(player, action, intent);
+        } else {
+          controlDispatcher.dispatchPrevious(player);
+        }
       } else if (ACTION_REWIND.equals(action)) {
-        controlDispatcher.dispatchRewind(player);
+        if (primaryActionReceiver != null) {
+          primaryActionReceiver.onAction(player, action, intent);
+        } else {
+          controlDispatcher.dispatchRewind(player);
+        }
       } else if (ACTION_FAST_FORWARD.equals(action)) {
-        controlDispatcher.dispatchFastForward(player);
+        if (primaryActionReceiver != null) {
+          primaryActionReceiver.onAction(player, action, intent);
+        } else {
+          controlDispatcher.dispatchFastForward(player);
+        }
       } else if (ACTION_NEXT.equals(action)) {
-        controlDispatcher.dispatchNext(player);
+        if (primaryActionReceiver != null) {
+          primaryActionReceiver.onAction(player, action, intent);
+        } else {
+          controlDispatcher.dispatchNext(player);
+        }
       } else if (ACTION_STOP.equals(action)) {
-        controlDispatcher.dispatchStop(player, /* reset= */ true);
+        if (primaryActionReceiver != null) {
+          primaryActionReceiver.onAction(player, action, intent);
+        } else {
+          controlDispatcher.dispatchStop(player, /* reset= */ true);
+        }
       } else if (ACTION_DISMISS.equals(action)) {
-        stopNotification(/* dismissedByUser= */ true);
+        if (primaryActionReceiver != null) {
+          primaryActionReceiver.onAction(player, action, intent);
+        } else {
+          stopNotification(/* dismissedByUser= */ true);
+        }
       } else if (action != null
           && customActionReceiver != null
           && customActions.containsKey(action)) {
