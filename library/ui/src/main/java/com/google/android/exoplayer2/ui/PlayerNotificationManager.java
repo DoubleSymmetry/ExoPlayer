@@ -841,6 +841,10 @@ public class PlayerNotificationManager {
     }
   }
 
+  public final boolean getUsePreviousAction() {
+    return this.usePreviousAction;
+  }
+
   /**
    * Sets whether the previous action should be used.
    *
@@ -851,6 +855,10 @@ public class PlayerNotificationManager {
       this.usePreviousAction = usePreviousAction;
       invalidate();
     }
+  }
+
+  public final boolean getUseNextActionInCompactView() {
+    return this.useNextActionInCompactView;
   }
 
   /**
@@ -873,6 +881,10 @@ public class PlayerNotificationManager {
     }
   }
 
+  public final boolean getUsePreviousActionInCompactView() {
+    return this.usePreviousActionInCompactView;
+  }
+
   /**
    * If {@link #setUsePreviousAction usePreviousAction} is {@code true}, sets whether the previous
    * action should also be used in compact view. Has no effect if {@link #setUsePreviousAction
@@ -893,6 +905,10 @@ public class PlayerNotificationManager {
     }
   }
 
+  public final boolean getUseFastForwardAction() {
+    return this.useFastForwardAction;
+  }
+
   /**
    * Sets whether the fast forward action should be used.
    *
@@ -905,6 +921,10 @@ public class PlayerNotificationManager {
     }
   }
 
+  public final boolean getUseRewindAction() {
+    return this.useRewindAction;
+  }
+
   /**
    * Sets whether the rewind action should be used.
    *
@@ -915,6 +935,10 @@ public class PlayerNotificationManager {
       this.useRewindAction = useRewindAction;
       invalidate();
     }
+  }
+
+  public final boolean getUseFastForwardActionInCompactView() {
+    return this.useFastForwardActionInCompactView;
   }
 
   /**
@@ -938,6 +962,10 @@ public class PlayerNotificationManager {
     }
   }
 
+  public final boolean getUseRewindActionInCompactView() {
+    return this.useRewindActionInCompactView;
+  }
+
   /**
    * Sets whether the rewind action should also be used in compact view. Has no effect if {@link
    * #ACTION_REWIND} is not enabled, for instance if the media is not seekable.
@@ -957,6 +985,10 @@ public class PlayerNotificationManager {
     }
   }
 
+  public final boolean getUsePlayPauseActions() {
+    return this.usePlayPauseActions;
+  }
+
   /**
    * Sets whether the play and pause actions should be used.
    *
@@ -967,6 +999,10 @@ public class PlayerNotificationManager {
       this.usePlayPauseActions = usePlayPauseActions;
       invalidate();
     }
+  }
+
+  public final boolean getUseStopAction() {
+    return this.useStopAction;
   }
 
   /**
