@@ -829,6 +829,10 @@ public class PlayerNotificationManager {
     }
   }
 
+  public final boolean getUseNextAction() {
+    return this.useNextAction;
+  }
+
   /**
    * Sets whether the next action should be used.
    *
