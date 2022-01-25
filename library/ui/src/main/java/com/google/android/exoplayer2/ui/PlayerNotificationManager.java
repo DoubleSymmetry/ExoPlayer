@@ -714,6 +714,7 @@ public class PlayerNotificationManager {
   private boolean useFastForwardActionInCompactView;
   private boolean usePlayPauseActions;
   private boolean useStopAction;
+  private boolean useStopActionInCompactView;
   private int badgeIconType;
   private boolean colorized;
   private int defaults;
@@ -1020,6 +1021,24 @@ public class PlayerNotificationManager {
     }
     this.useStopAction = useStopAction;
     invalidate();
+  }
+
+
+  public final boolean getUseStopActionInCompactView() {
+    return this.useStopActionInCompactView;
+  }
+
+  /**
+   * If {@link #setUseStopAction useStopAction} is {@code true}, sets whether the stop action should
+   * also be used in compact view.
+   *
+   * @param useStopActionInCompactView Whether to use the stop action in compact view.
+   */
+  public final void setUseStopActionInCompactView(boolean useStopActionInCompactView) {
+    if (this.useStopActionInCompactView != useStopActionInCompactView) {
+      this.useStopActionInCompactView = useStopActionInCompactView;
+      invalidate();
+    }
   }
 
   /**
@@ -1417,7 +1436,7 @@ public class PlayerNotificationManager {
             ? actionNames.indexOf(ACTION_NEXT)
             : (useFastForwardActionInCompactView ? actionNames.indexOf(ACTION_FAST_FORWARD) : -1);
 
-    int[] actionIndices = new int[3];
+    int[] actionIndices = new int[4];
     int actionCounter = 0;
     if (leftSideActionIndex != -1) {
       actionIndices[actionCounter++] = leftSideActionIndex;
@@ -1430,6 +1449,9 @@ public class PlayerNotificationManager {
     }
     if (rightSideActionIndex != -1) {
       actionIndices[actionCounter++] = rightSideActionIndex;
+    }
+    if (useStopActionInCompactView) {
+      actionIndices[actionCounter++] = actionNames.indexOf(ACTION_STOP);
     }
     return Arrays.copyOf(actionIndices, actionCounter);
   }
