@@ -66,7 +66,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 /**
  * Starts, updates and cancels a media style notification reflecting the player state. The actions
  * included in the notification can be customized along with their drawables, as described below.
@@ -310,7 +309,6 @@ public class PlayerNotificationManager {
 
   /** A builder for {@link PlayerNotificationManager} instances. */
   public static class Builder {
-
     protected final Context context;
     protected final int notificationId;
     protected final String channelId;
@@ -720,6 +718,7 @@ public class PlayerNotificationManager {
   private boolean useFastForwardActionInCompactView;
   private boolean usePlayPauseActions;
   private boolean useStopAction;
+  private boolean useStopActionInCompactView;
   private int badgeIconType;
   private boolean colorized;
   private int defaults;
@@ -1026,6 +1025,24 @@ public class PlayerNotificationManager {
     }
     this.useStopAction = useStopAction;
     invalidate();
+  }
+
+
+  public final boolean getUseStopActionInCompactView() {
+    return this.useStopActionInCompactView;
+  }
+
+  /**
+   * If {@link #setUseStopAction useStopAction} is {@code true}, sets whether the stop action should
+   * also be used in compact view.
+   *
+   * @param useStopActionInCompactView Whether to use the stop action in compact view.
+   */
+  public final void setUseStopActionInCompactView(boolean useStopActionInCompactView) {
+    if (this.useStopActionInCompactView != useStopActionInCompactView) {
+      this.useStopActionInCompactView = useStopActionInCompactView;
+      invalidate();
+    }
   }
 
   /**
@@ -1412,6 +1429,7 @@ public class PlayerNotificationManager {
    */
   @SuppressWarnings("unused")
   protected int[] getActionIndicesForCompactView(List<String> actionNames, Player player) {
+    int stopActionIndex = actionNames.indexOf(ACTION_STOP);
     int pauseActionIndex = actionNames.indexOf(ACTION_PAUSE);
     int playActionIndex = actionNames.indexOf(ACTION_PLAY);
     int leftSideActionIndex =
@@ -1436,6 +1454,9 @@ public class PlayerNotificationManager {
     }
     if (rightSideActionIndex != -1) {
       actionIndices[actionCounter++] = rightSideActionIndex;
+    }
+    if (useStopActionInCompactView) {
+      actionIndices[actionCounter++] = stopActionIndex;
     }
     return Arrays.copyOf(actionIndices, actionCounter);
   }
