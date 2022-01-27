@@ -64,7 +64,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 /**
  * Starts, updates and cancels a media style notification reflecting the player state. The actions
  * included in the notification can be customized along with their drawables, as described below.
@@ -308,7 +307,6 @@ public class PlayerNotificationManager {
 
   /** A builder for {@link PlayerNotificationManager} instances. */
   public static class Builder {
-
     protected final Context context;
     protected final int notificationId;
     protected final String channelId;
@@ -1436,7 +1434,7 @@ public class PlayerNotificationManager {
             ? actionNames.indexOf(ACTION_NEXT)
             : (useFastForwardActionInCompactView ? actionNames.indexOf(ACTION_FAST_FORWARD) : -1);
 
-    int[] actionIndices = new int[4];
+    int[] actionIndices = new int[3];
     int actionCounter = 0;
     if (leftSideActionIndex != -1) {
       actionIndices[actionCounter++] = leftSideActionIndex;
