@@ -1423,6 +1423,7 @@ public class PlayerNotificationManager {
    */
   @SuppressWarnings("unused")
   protected int[] getActionIndicesForCompactView(List<String> actionNames, Player player) {
+    int stopActionIndex = actionNames.indexOf(ACTION_STOP);
     int pauseActionIndex = actionNames.indexOf(ACTION_PAUSE);
     int playActionIndex = actionNames.indexOf(ACTION_PLAY);
     int leftSideActionIndex =
@@ -1449,7 +1450,7 @@ public class PlayerNotificationManager {
       actionIndices[actionCounter++] = rightSideActionIndex;
     }
     if (useStopActionInCompactView) {
-      actionIndices[actionCounter++] = actionNames.indexOf(ACTION_STOP);
+      actionIndices[actionCounter++] = stopActionIndex;
     }
     return Arrays.copyOf(actionIndices, actionCounter);
   }
