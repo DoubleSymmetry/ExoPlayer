@@ -768,11 +768,6 @@ public class PlayerNotificationManager {
     playerListener = new PlayerListener();
     notificationBroadcastReceiver = new NotificationBroadcastReceiver();
     intentFilter = new IntentFilter();
-    usePreviousAction = true;
-    useNextAction = true;
-    usePlayPauseActions = true;
-    useRewindAction = true;
-    useFastForwardAction = true;
     colorized = true;
     useChronometer = true;
     color = Color.TRANSPARENT;
@@ -1546,7 +1541,6 @@ public class PlayerNotificationManager {
   }
 
   private class NotificationBroadcastReceiver extends BroadcastReceiver {
-
     @SuppressWarnings("deprecation")
     @Override
     public void onReceive(Context context, Intent intent) {
